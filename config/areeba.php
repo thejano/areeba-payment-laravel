@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'api_key' => env('AREEBA_API_KEY', 'TESTKEYIQ1100000101'),
+    'api_key' => env('AREEBA_API_KEY',),
     'username' => env('AREEBA_USERNAME'),
     'password' => env('AREEBA_PASSWORD'),
     'base_url' => env('AREEBA_BASE_URL', 'https://gateway.areebapayment.com/api/v3'),
