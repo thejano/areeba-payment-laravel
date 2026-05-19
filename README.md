@@ -4,6 +4,11 @@
 
 A Laravel package for integrating with Areeba Payment Gateway.
 
+The package supports two Areeba products:
+
+- **IXOPAY** (default) — the transaction-based gateway hosted at `gateway.areebapayment.com`.
+- **MPGS / ePayment** — Areeba's hosted-checkout product on `epayment.areeba.com`, backed by MasterCard Payment Gateway Services. See [Using the MPGS / ePayment Driver](#using-the-mpgs--epayment-driver) below.
+
 ## Payment Flow
 
 This flow requires you to redirect the end-user to the payment page as advised in the `redirectUrl` response.
@@ -106,6 +111,85 @@ This will return a JSON response including `transactionStatus` with possible val
 - `REDIRECT` - Transaction has not been processed yet.
 - `ERROR` - Transaction failed.
 
+
+## Using the MPGS / ePayment Driver
+
+Areeba also offers a hosted-checkout product (MPGS / ePayment) on `https://epayment.areeba.com`. It uses a different API than the IXOPAY gateway above: you create a checkout `session`, redirect the user to a hosted page (or embed `checkout.js`), and later query the `order` resource for the final payment status.
+
+### Selecting the Driver
+
+Set `AREEBA_DRIVER=mpgs` in your `.env` to make `app(PaymentGateway::class)` resolve to the MPGS driver. Leaving it unset keeps the default IXOPAY behavior unchanged.
+
+```ini
+AREEBA_DRIVER=mpgs
+```
+
+Alternatively, you can call the MPGS service directly without changing the default driver — the IXOPAY service remains available either way.
+
+### MPGS Environment Variables
+
+The MPGS credentials are namespaced under `AREEBA_MPGS_*` so they do not collide with the IXOPAY keys:
+
+```ini
+AREEBA_MPGS_BASE_URL=https://epayment.areeba.com
+AREEBA_MPGS_API_VERSION=100
+AREEBA_MPGS_MERCHANT_ID=your_merchant_id
+AREEBA_MPGS_USERNAME=merchant.your_merchant_id
+AREEBA_MPGS_PASSWORD=your_password
+AREEBA_MPGS_CURRENCY=USD
+AREEBA_MPGS_CHECKOUT_JS_URL=https://epayment.areeba.com/static/checkout/checkout.min.js
+AREEBA_MPGS_CHECKOUT_VERSION=1.0.0
+AREEBA_MPGS_SUCCESS_REDIRECT_URL=https://yourapp.com/payment/success
+AREEBA_MPGS_ERROR_REDIRECT_URL=https://yourapp.com/payment/error
+AREEBA_MPGS_CANCEL_REDIRECT_URL=https://yourapp.com/payment/cancel
+AREEBA_MPGS_CALLBACK_REDIRECT_URL=https://yourapp.com/payment/callback
+```
+
+### Usage
+
+```php
+use TheJano\AreebaPayment\Services\AreebaMpgsPayment;
+
+$paymentData = AreebaMpgsPayment::make()->initiatePayment('ORDER-123', '100.00', 'John Doe');
+
+// $paymentData->purchaseId  → MPGS session id (use it with checkout.js)
+// $paymentData->redirectUrl → hosted-checkout URL (use it for a plain redirect flow)
+return redirect($paymentData->redirectUrl);
+```
+
+Or via the facade:
+
+```php
+use TheJano\AreebaPayment\Facades\AreebaMpgsPayment;
+
+$paymentData = AreebaMpgsPayment::initiatePayment('ORDER-123', '100.00', 'John Doe');
+```
+
+### Embedded Checkout vs. Redirect
+
+The `purchaseId` returned from `initiatePayment` is the MPGS `session.id`. With it you can either:
+
+1. **Redirect** the user to `$paymentData->redirectUrl` (the hosted checkout page), or
+2. **Embed** `checkout.js` on your own page and call:
+
+   ```html
+   <script src="https://epayment.areeba.com/static/checkout/checkout.min.js"></script>
+   <script>
+     Checkout.configure({ session: { id: '<?= $paymentData->purchaseId ?>' } });
+     Checkout.showPaymentPage();
+   </script>
+   ```
+
+### Checking Payment Status
+
+```php
+use TheJano\AreebaPayment\Facades\AreebaMpgsPayment;
+
+$response = AreebaMpgsPayment::checkPaymentStatus('ORDER-123');
+// Inspect $response['status'] — values include CAPTURED, AUTHORIZED, FAILED, DECLINED, EXPIRED, CANCELLED.
+```
+
+`checkPaymentStatus` returns the raw decoded JSON from MPGS so your application can map gateway-specific statuses to its own payment states.
 
 ## License
 
