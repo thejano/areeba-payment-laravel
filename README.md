@@ -165,6 +165,27 @@ use TheJano\AreebaPayment\Facades\AreebaMpgsPayment;
 $paymentData = AreebaMpgsPayment::initiatePayment('ORDER-123', '100.00', 'John Doe');
 ```
 
+### Getting Just the Session ID or Payment Link
+
+If you don't need the full `AreebaPaymentRequestData` object, two convenience methods return the value you want as a plain string (or `null` if the gateway call fails — the failure is already logged via Laravel's logger):
+
+```php
+use TheJano\AreebaPayment\Facades\AreebaMpgsPayment;
+
+// Hosted-checkout redirect URL
+$paymentLink = AreebaMpgsPayment::getPaymentLink('ORDER-123', '100.00', 'John Doe');
+if ($paymentLink === null) {
+    abort(502, 'Payment gateway unavailable');
+}
+return redirect($paymentLink);
+
+// MPGS session ID (for embedded checkout.js)
+$sessionId = AreebaMpgsPayment::getSessionId('ORDER-123', '100.00', 'John Doe');
+return view('checkout', ['sessionId' => $sessionId]);
+```
+
+Both methods accept the same arguments as `initiatePayment()` and call it internally — they are pure projections of its result, so there is no extra network round-trip. Use `initiatePayment()` directly when you also need the error message or other fields on failure.
+
 ### Embedded Checkout vs. Redirect
 
 The `purchaseId` returned from `initiatePayment` is the MPGS `session.id`. With it you can either:

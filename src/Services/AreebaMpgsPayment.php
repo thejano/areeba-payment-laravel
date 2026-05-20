@@ -70,6 +70,16 @@ class AreebaMpgsPayment implements PaymentGateway
         ]);
     }
 
+    public function getSessionId(string $transactionId, string $amount, string $name, ?string $currency = null): ?string
+    {
+        return $this->initiatePayment($transactionId, $amount, $name, $currency)->purchaseId;
+    }
+
+    public function getPaymentLink(string $transactionId, string $amount, string $name, ?string $currency = null): ?string
+    {
+        return $this->initiatePayment($transactionId, $amount, $name, $currency)->redirectUrl;
+    }
+
     public function checkPaymentStatus(string $transactionId): array
     {
         $response = $this->http()->get($this->orderUrl($transactionId));
