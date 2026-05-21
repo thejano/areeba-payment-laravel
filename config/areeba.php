@@ -51,14 +51,6 @@ return [
         'username'         => env('AREEBA_MPGS_USERNAME'),
         'password'         => env('AREEBA_MPGS_PASSWORD'),
         'currency'         => env('AREEBA_MPGS_CURRENCY', 'USD'),
-        'checkout_js_url'  => env('AREEBA_MPGS_CHECKOUT_JS_URL', 'https://epayment.areeba.com/static/checkout/checkout.min.js'),
         'checkout_version' => env('AREEBA_MPGS_CHECKOUT_VERSION', '1.0.0'),
-
-        'redirect_url' => [
-            'success'  => env('AREEBA_MPGS_SUCCESS_REDIRECT_URL', ''),
-            'error'    => env('AREEBA_MPGS_ERROR_REDIRECT_URL', ''),
-            'cancel'   => env('AREEBA_MPGS_CANCEL_REDIRECT_URL', ''),
-            'callback' => env('AREEBA_MPGS_CALLBACK_REDIRECT_URL', ''),
-        ],
     ],
 ];
