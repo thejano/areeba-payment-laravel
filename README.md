@@ -221,3 +221,5 @@ This package is open-source and licensed under the [MIT License](LICENSE).
 For more details, visit the official API documentation:
 
 [https://www.areeba.com/projects/areeba_gateway/integration](https://www.areeba.com/projects/areeba_gateway/integration)
+
+[https://www.areeba.com/documentations/areeba_docs.integration.html](https://www.areeba.com/documentations/areeba_docs.integration.html)
