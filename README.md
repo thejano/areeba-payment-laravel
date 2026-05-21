@@ -137,13 +137,13 @@ AREEBA_MPGS_MERCHANT_ID=your_merchant_id
 AREEBA_MPGS_USERNAME=merchant.your_merchant_id
 AREEBA_MPGS_PASSWORD=your_password
 AREEBA_MPGS_CURRENCY=USD
-AREEBA_MPGS_CHECKOUT_JS_URL=https://epayment.areeba.com/static/checkout/checkout.min.js
 AREEBA_MPGS_CHECKOUT_VERSION=1.0.0
-AREEBA_MPGS_SUCCESS_REDIRECT_URL=https://yourapp.com/payment/success
-AREEBA_MPGS_ERROR_REDIRECT_URL=https://yourapp.com/payment/error
+AREEBA_MPGS_RETURN_REDIRECT_URL=https://yourapp.com/payment/return
 AREEBA_MPGS_CANCEL_REDIRECT_URL=https://yourapp.com/payment/cancel
-AREEBA_MPGS_CALLBACK_REDIRECT_URL=https://yourapp.com/payment/callback
+AREEBA_MPGS_TIMEOUT_REDIRECT_URL=https://yourapp.com/payment/timeout
 ```
+
+The three redirect URLs are sent to MPGS as the `interaction.returnUrl`, `interaction.cancelUrl`, and `interaction.timeoutUrl` fields when a checkout session is created. MPGS will land the user on `returnUrl` whether the payment succeeded or failed — inspect the resulting `order.status` (see [Checking Payment Status](#checking-payment-status-1)) to decide how to render the page.
 
 ### Usage
 
