@@ -52,5 +52,11 @@ return [
         'password'         => env('AREEBA_MPGS_PASSWORD'),
         'currency'         => env('AREEBA_MPGS_CURRENCY', 'USD'),
         'checkout_version' => env('AREEBA_MPGS_CHECKOUT_VERSION', '1.0.0'),
+
+        'redirect_url' => [
+            'return' => env('AREEBA_MPGS_RETURN_REDIRECT_URL', ''),
+            'cancel'  => env('AREEBA_MPGS_CANCEL_REDIRECT_URL', ''),
+            'timeout' => env('AREEBA_MPGS_TIMEOUT_REDIRECT_URL', ''),
+        ],
     ],
 ];

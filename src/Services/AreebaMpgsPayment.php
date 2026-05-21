@@ -97,7 +97,9 @@ class AreebaMpgsPayment implements PaymentGateway
                 'merchant' => [
                     'name' => config('app.name'),
                 ],
-                'returnUrl' => (string) config('areeba.mpgs.redirect_url.success', ''),
+                'returnUrl'  => (string) config('areeba.mpgs.redirect_url.return', ''),
+                'cancelUrl'  => (string) config('areeba.mpgs.redirect_url.cancel', ''),
+                'timeoutUrl' => (string) config('areeba.mpgs.redirect_url.timeout', ''),
             ],
             'order' => [
                 'id'          => $transactionId,
