@@ -2,6 +2,7 @@
 .php_cs
 .php_cs.cache
 .phpunit.result.cache
+.phpunit.cache
 build
 composer.lock
 coverage
@@ -12,3 +13,5 @@ vendor
 node_modules
 .php-cs-fixer.cache
 .DS_Store
+.claude
+CLAUDE.md
