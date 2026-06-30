@@ -51,11 +51,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require \
-            "illuminate/support:${{ matrix.laravel }}" \
-            "orchestra/testbench:${{ matrix.testbench }}" \
-            --no-interaction --no-update
-          composer update --prefer-dist --no-interaction --prefer-stable
+          # CI installs are ephemeral and only run the test suite; allow the
+          # resolver to pick framework versions that may carry advisories.
+          composer config audit.block-insecure false
+          composer update \
+            --with="illuminate/support:${{ matrix.laravel }}" \
+            --with="orchestra/testbench:${{ matrix.testbench }}" \
+            --prefer-dist --prefer-stable --no-audit --no-interaction
 
       - name: Run tests
         run: vendor/bin/pest
