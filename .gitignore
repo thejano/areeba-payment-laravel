@@ -12,3 +12,5 @@ vendor
 node_modules
 .php-cs-fixer.cache
 .DS_Store
+.claude
+CLAUDE.md
